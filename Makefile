@@ -12,7 +12,8 @@ ifeq ($(OS),Windows_NT)
     SRC = $(shell dir /S /B src\*.cpp)
     SETUP = powershell -ExecutionPolicy Bypass -File setup/setup-dependencies-windows.ps1
 else ifeq ($(shell uname),Darwin)
-    LIBS = -lglfw -lGLEW -framework OpenGL
+    CXXFLAGS += -I/opt/homebrew/include
+    LIBS = -L/opt/homebrew/lib -lglfw -lGLEW -framework OpenGL
     RM = rm -f
     SETUP = ./setup/setup-dependencies-linux.sh
 else
