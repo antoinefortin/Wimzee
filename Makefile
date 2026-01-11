@@ -1,10 +1,10 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Iinclude -Ivendor/spdlog/include -Ivendor/glm
+CXXFLAGS = -std=c++17 -Wall -Iinclude -Ivendor/spdlog/include -Ivendor/glm  -Ivendor/stb
 
 SRC = $(shell find src -name '*.cpp')
 OUT = wimzee
 
-# Détection OS
+# OS Detection
 ifeq ($(OS),Windows_NT)
     LIBS = -lglew32 -lglfw3 -lopengl32 -lgdi32
     OUT := $(OUT).exe
@@ -29,7 +29,11 @@ all: setup
 	$(CXX) $(CXXFLAGS) $(SRC) -o $(OUT) $(LIBS)
 
 run: all
+ifeq ($(OS),Windows_NT)
 	$(OUT)
+else
+	./$(OUT)
+endif
 
 clean:
 	$(RM) $(OUT)

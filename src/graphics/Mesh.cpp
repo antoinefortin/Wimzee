@@ -1,0 +1,58 @@
+#include "graphics/Mesh.h"
+#include <spdlog/spdlog.h>
+
+Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices)
+    : m_Vertices(vertices), m_Indices(indices), m_VAO(0), m_VBO(0), m_EBO(0) {
+    SetupMesh();
+}
+
+Mesh::~Mesh() {
+    glDeleteVertexArrays(1, &m_VAO);
+    glDeleteBuffers(1, &m_VBO);
+    glDeleteBuffers(1, &m_EBO);
+}
+
+void Mesh::SetupMesh() {
+    // Génère buffers
+    glGenVertexArrays(1, &m_VAO);
+    glGenBuffers(1, &m_VBO);
+    glGenBuffers(1, &m_EBO);
+    
+    glBindVertexArray(m_VAO);
+    
+    // VBO - Vertex data
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+    glBufferData(GL_ARRAY_BUFFER, m_Vertices.size() * sizeof(Vertex), 
+                 m_Vertices.data(), GL_STATIC_DRAW);
+    
+    // EBO - Indices
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Indices.size() * sizeof(uint32_t),
+                 m_Indices.data(), GL_STATIC_DRAW);
+    
+    // Vertex attributes
+    // Position
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    
+    // Normal
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 
+                         (void*)offsetof(Vertex, normal));
+    
+    // TexCoord
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                         (void*)offsetof(Vertex, texCoord));
+    
+    glBindVertexArray(0);
+    
+    spdlog::info("Mesh created: {} vertices, {} indices", 
+                 m_Vertices.size(), m_Indices.size());
+}
+
+void Mesh::Draw() {
+    glBindVertexArray(m_VAO);
+    glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}

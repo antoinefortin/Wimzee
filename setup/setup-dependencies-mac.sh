@@ -21,4 +21,15 @@ else
     echo "GLM already installed!"
 fi
 
+
+# stb (stb_image)
+if [ ! -d "vendor/stb" ]; then
+    echo "Downloading stb..."
+    git clone --depth 1 https://github.com/nothings/stb.git vendor/stb
+else
+    echo "stb already installed!"
+fi
+
+
+
 echo "Terminé!"

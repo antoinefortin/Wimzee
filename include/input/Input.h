@@ -1,4 +1,6 @@
 #pragma once
+#define GLEW_STATIC
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 class Input
@@ -33,6 +35,10 @@ private:
     static float s_MouseLastX, s_MouseLastY;
 };
 
+
+/*
+    Just a way to wrap around GLFW kley
+*/
 #define KEY_W GLFW_KEY_W
 #define KEY_A GLFW_KEY_A
 #define KEY_S GLFW_KEY_S
@@ -42,3 +48,6 @@ private:
 
 #define MOUSE_LEFT GLFW_MOUSE_BUTTON_LEFT
 #define MOUSE_RIGHT GLFW_MOUSE_BUTTON_RIGHT
+
+
+
