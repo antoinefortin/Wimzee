@@ -6,26 +6,22 @@ Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& ind
     SetupMesh();
 }
 
-Mesh::~Mesh() {
+Mesh::~Mesh() 
+ {
     glDeleteVertexArrays(1, &m_VAO);
     glDeleteBuffers(1, &m_VBO);
     glDeleteBuffers(1, &m_EBO);
 }
 
 void Mesh::SetupMesh() {
-    // Génère buffers
     glGenVertexArrays(1, &m_VAO);
     glGenBuffers(1, &m_VBO);
     glGenBuffers(1, &m_EBO);
     
     glBindVertexArray(m_VAO);
-    
-    // VBO - Vertex data
     glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
     glBufferData(GL_ARRAY_BUFFER, m_Vertices.size() * sizeof(Vertex), 
                  m_Vertices.data(), GL_STATIC_DRAW);
-    
-    // EBO - Indices
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Indices.size() * sizeof(uint32_t),
                  m_Indices.data(), GL_STATIC_DRAW);

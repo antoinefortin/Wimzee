@@ -16,8 +16,10 @@ std::vector<Vertex> GenerateSphereVertices(float radius, int segments)
     
     for (int lat = 0; lat <= segments; lat++) {
         for (int lon = 0; lon <= segments; lon++) {
-            float theta = lat * M_PI / segments;        // 0 à π (haut-bas)
-            float phi = lon * 2 * M_PI / segments;      // 0 à 2π (tour complet)
+            float theta = lat * M_PI / segments;        
+            
+            float phi = lon * 2 * M_PI / segments;      
+            
             
             // Position sur la sphere
             float x = radius * sin(theta) * cos(phi);
@@ -137,6 +139,12 @@ Application::Application() : m_Running(true) {
     std::vector<uint32_t> cubeIndices = GenerateCubeIndices();
     
     m_CubeMesh = std::make_shared<Mesh>(cubeVertices, cubeIndices);
+
+     // Sphere mesh
+    std::vector<Vertex> sphereVertices = GenerateSphereVertices(0.5f, 32);  // radius 0.5, 32 segments
+    std::vector<uint32_t> sphereIndices = GenerateSphereIndices(32);
+    m_SphereMesh = std::make_shared<Mesh>(sphereVertices, sphereIndices);
+
     // Shader
     m_BasicShader = std::make_shared<Shader>
     (
@@ -286,10 +294,19 @@ void Application::Render() {
     m_BasicShader->SetMat4("uProjection", projection);
     
 
-    for (const auto& obj : m_Objects) {
+    
+    for (size_t i = 0; i < m_Objects.size(); i++) {
+        const auto& obj = m_Objects[i];
+        
         m_BasicShader->SetMat4("uModel", obj.GetModelMatrix());
         m_BasicShader->SetVec3("uColor", obj.color);
-        m_CubeMesh->Draw();
+        
+        // Premier objet = sphere, les autres = cubes
+        if (i == 0) {
+            m_SphereMesh->Draw();
+        } else {
+            m_CubeMesh->Draw();
+        }
     }
     
     m_BasicShader->Unbind();
