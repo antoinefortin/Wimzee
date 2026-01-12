@@ -10,6 +10,55 @@
 #include <chrono>
 
 
+std::vector<Vertex> GenerateSphereVertices(float radius, int segments)
+{
+    std::vector<Vertex> vertices;
+    
+    for (int lat = 0; lat <= segments; lat++) {
+        for (int lon = 0; lon <= segments; lon++) {
+            float theta = lat * M_PI / segments;        // 0 à π (haut-bas)
+            float phi = lon * 2 * M_PI / segments;      // 0 à 2π (tour complet)
+            
+            // Position sur la sphere
+            float x = radius * sin(theta) * cos(phi);
+            float y = radius * cos(theta);
+            float z = radius * sin(theta) * sin(phi);
+            
+            glm::vec3 position(x, y, z);
+            glm::vec3 normal = glm::normalize(position);  // Normal pointe vers l'extérieur
+            glm::vec2 texCoord(lon / (float)segments, lat / (float)segments);
+            
+            vertices.push_back(Vertex(position, normal, texCoord));
+        }
+    }
+    
+    return vertices;
+}
+
+std::vector<uint32_t> GenerateSphereIndices(int segments)
+{
+    std::vector<uint32_t> indices;
+    
+    for (int lat = 0; lat < segments; lat++) {
+        for (int lon = 0; lon < segments; lon++) {
+            int current = lat * (segments + 1) + lon;
+            int next = current + segments + 1;
+            
+            // Premier triangle
+            indices.push_back(current);
+            indices.push_back(next);
+            indices.push_back(current + 1);
+            
+            // Deuxième triangle
+            indices.push_back(current + 1);
+            indices.push_back(next);
+            indices.push_back(next + 1);
+        }
+    }
+    
+    return indices;
+}
+
 std::vector<Vertex> GenerateCubeVertices()
 {
 
@@ -100,6 +149,28 @@ Application::Application() : m_Running(true) {
     m_Camera->SetPosition(glm::vec3(0.0f, 2.0f, 5.0f));
 
 
+    m_Objects.push_back({
+        .position = glm::vec3(0, 0, 0),
+        .rotation = glm::vec3(0, 0, 0),
+        .scale = glm::vec3(1, 1, 1),
+        .color = glm::vec3(1.0f, 0.0f, 0.0f)
+    });
+    
+    // Cube 2 - rouge en haut à droite
+    m_Objects.push_back({
+        .position = glm::vec3(3, 5, 0),
+        .rotation = glm::vec3(0, 0, 0),
+        .scale = glm::vec3(1, 1, 1),
+        .color = glm::vec3(0, 1, 0)
+    });
+    
+    // Cube 3 - violet à gauche avec rotation
+    m_Objects.push_back({
+        .position = glm::vec3(-3, 0, 0),
+        .rotation = glm::vec3(0, 45, 0),  // Rotation Y
+        .scale = glm::vec3(1, 1, 1),
+        .color = glm::vec3(0, 0, 1.0f)
+    });
 
 }
 
@@ -159,8 +230,14 @@ void Application::HandleCameraInput(float deltaTime)
     if (Input::IsKeyPressed(KEY_D)) {
         m_Camera->MoveRight(m_CameraSpeed * deltaTime);
     }
-    if (Input::IsKeyPressed(KEY_SPACE)) {
+    if (Input::IsKeyPressed(KEY_Q)) {
         m_Camera->MoveUp(m_CameraSpeed * deltaTime);
+    }
+
+    if(Input::IsKeyPressed(KEY_E))
+    {
+        m_Camera->MoveUp(-m_CameraSpeed * deltaTime);
+
     }
 
         // Mouse look (right click to rotate)
@@ -200,43 +277,21 @@ void Application::Update(float deltaTime) {
 
 void Application::Render() {
     m_Renderer->Clear();
-    // draw simple cube from cam
-    {
-        glm::mat4 view = m_Camera->GetViewMatrix();
-        glm::mat4 projection = m_Camera->GetProjectionMatrix();
-        
-        // Identity
-        glm::mat4 model = glm::mat4(1.0f);  // origin 000
-        
-        // Binding shader and matricn es 
-        m_BasicShader->Bind();
-        m_BasicShader->SetMat4("uModel", model);
-        m_BasicShader->SetMat4("uView", view);
-        m_BasicShader->SetMat4("uProjection", projection);
-        m_BasicShader->SetVec3("uColor", glm::vec3(1.0f, 0.5f, 0.2f));  // Orange
-        
-
-        // render cube
-        m_CubeMesh->Draw();
-
-
-    }
-
-
-        // nex tcube
-    glm::mat4 model2 = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 0.0f, 0.0f));
-    m_BasicShader->SetMat4("uModel", model2);
-    m_BasicShader->SetVec3("uColor", glm::vec3(0.2f, 1.0f, 0.5f));
-    m_CubeMesh->Draw();
     
-    // nnew cube 
-    glm::mat4 model3 = glm::mat4(1.0f);
-    model3 = glm::translate(model3, glm::vec3(-3.0f, 0.0f, 0.0f));
-    model3 = glm::rotate(model3, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    m_BasicShader->SetMat4("uModel", model3);
-    m_BasicShader->SetVec3("uColor", glm::vec3(0.5f, 0.2f, 1.0f));
-    m_CubeMesh->Draw();
+    glm::mat4 view = m_Camera->GetViewMatrix();
+    glm::mat4 projection = m_Camera->GetProjectionMatrix();
+    
+    m_BasicShader->Bind();
+    m_BasicShader->SetMat4("uView", view);
+    m_BasicShader->SetMat4("uProjection", projection);
+    
 
+    for (const auto& obj : m_Objects) {
+        m_BasicShader->SetMat4("uModel", obj.GetModelMatrix());
+        m_BasicShader->SetVec3("uColor", obj.color);
+        m_CubeMesh->Draw();
+    }
+    
     m_BasicShader->Unbind();
 
 }

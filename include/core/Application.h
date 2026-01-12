@@ -1,7 +1,8 @@
 #pragma once
 #include <cstdint>
 #include <memory>
-
+#include "core/RenderableObject.h"
+#include <vector>
 class Window;
 class Renderer;
 class Mesh;
@@ -27,7 +28,11 @@ private:
     
 
     std::shared_ptr<Mesh> m_CubeMesh;
+    std::shared_ptr<Mesh> m_SphereMesh;
+    
     std::shared_ptr<Shader> m_BasicShader;
+
+    std::vector<RenderableObject> m_Objects; 
 
     // Camera
     std::unique_ptr<Camera> m_Camera;
