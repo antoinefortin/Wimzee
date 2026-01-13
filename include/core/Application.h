@@ -33,7 +33,7 @@ private:
     std::shared_ptr<Shader> m_BasicShader;
 
     std::vector<RenderableObject> m_Objects; 
-
+    bool renderCube =  false;
     // Camera
     std::unique_ptr<Camera> m_Camera;
     float m_CameraSpeed = 5.0f;

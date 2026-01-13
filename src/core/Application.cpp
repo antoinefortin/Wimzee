@@ -134,10 +134,9 @@ Application::Application() : m_Running(true) {
     m_Renderer->SetClearColor(0.1f, 0.1f, 0.15f, 1.0f);
     spdlog::info("Application initialized");
 
-        
+    // Creating cube
     std::vector<Vertex> cubeVertices = GenerateCubeVertices();
-    std::vector<uint32_t> cubeIndices = GenerateCubeIndices();
-    
+    std::vector<uint32_t> cubeIndices = GenerateCubeIndices();    
     m_CubeMesh = std::make_shared<Mesh>(cubeVertices, cubeIndices);
 
      // Sphere mesh
@@ -155,30 +154,38 @@ Application::Application() : m_Running(true) {
     float aspectRatio = (float)m_Window->GetWidth() / (float)m_Window->GetHeight();
     m_Camera = std::make_unique<Camera>(45.0f, aspectRatio, 0.1f, 100.0f);
     m_Camera->SetPosition(glm::vec3(0.0f, 2.0f, 5.0f));
+    float offset = 12.5;
+    for(int i{0}; i <5; i++)
+    {
+        for(int y{0}; y < 5; y++)
+        {
+            m_Objects.push_back({
+            .position = glm::vec3(i, 0, y),
+            .rotation = glm::vec3(0, 0, 0),
+            .scale = glm::vec3(1, 1, 1),
+            .color = glm::vec3(abs(sin(i)), 0.0f, abs(cos(y)))
+        });
+        }
 
+    }
 
-    m_Objects.push_back({
-        .position = glm::vec3(0, 0, 0),
-        .rotation = glm::vec3(0, 0, 0),
-        .scale = glm::vec3(1, 1, 1),
-        .color = glm::vec3(1.0f, 0.0f, 0.0f)
-    });
-    
-    // Cube 2 - rouge en haut à droite
-    m_Objects.push_back({
-        .position = glm::vec3(3, 5, 0),
-        .rotation = glm::vec3(0, 0, 0),
-        .scale = glm::vec3(1, 1, 1),
-        .color = glm::vec3(0, 1, 0)
-    });
-    
-    // Cube 3 - violet à gauche avec rotation
-    m_Objects.push_back({
-        .position = glm::vec3(-3, 0, 0),
-        .rotation = glm::vec3(0, 45, 0),  // Rotation Y
-        .scale = glm::vec3(1, 1, 1),
-        .color = glm::vec3(0, 0, 1.0f)
-    });
+    if(false)
+    {
+        m_Objects.push_back({
+            .position = glm::vec3(3, 5, 0),
+            .rotation = glm::vec3(0, 0, 0),
+            .scale = glm::vec3(1, 1, 1),
+            .color = glm::vec3(0, 1, 0)
+        });
+        
+        m_Objects.push_back({
+            .position = glm::vec3(-3, 0, 0),
+            .rotation = glm::vec3(0, 45, 0),  // Rotation Y
+            .scale = glm::vec3(1, 1, 1),
+            .color = glm::vec3(0, 0, 1.0f)
+        });
+    }
+
 
 }
 
@@ -239,11 +246,15 @@ void Application::HandleCameraInput(float deltaTime)
         m_Camera->MoveRight(m_CameraSpeed * deltaTime);
     }
     if (Input::IsKeyPressed(KEY_Q)) {
+
+        renderCube = false;
+
         m_Camera->MoveUp(m_CameraSpeed * deltaTime);
     }
 
     if(Input::IsKeyPressed(KEY_E))
     {
+        renderCube = true;
         m_Camera->MoveUp(-m_CameraSpeed * deltaTime);
 
     }
@@ -301,12 +312,18 @@ void Application::Render() {
         m_BasicShader->SetMat4("uModel", obj.GetModelMatrix());
         m_BasicShader->SetVec3("uColor", obj.color);
         
-        // Premier objet = sphere, les autres = cubes
-        if (i == 0) {
-            m_SphereMesh->Draw();
-        } else {
-            m_CubeMesh->Draw();
-        }
+        // sphere and cube rendering...
+        if (i < 500) {
+            if(renderCube == false)
+            {
+                m_SphereMesh->Draw();
+            }
+            else 
+            {
+                m_CubeMesh->Draw();
+            }
+            
+        } 
     }
     
     m_BasicShader->Unbind();
