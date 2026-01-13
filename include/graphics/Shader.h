@@ -1,8 +1,5 @@
 #pragma once
 
-
-// GLEW DOIT être inclus AVANT tout autre header OpenGL
-#define GLEW_STATIC
 #include <GL/glew.h>
 
 #include <glm/glm.hpp>

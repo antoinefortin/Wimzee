@@ -10,6 +10,10 @@
 #include <chrono>
 
 
+#ifndef M_PI
+    #define M_PI 3.14159
+#endif
+
 std::vector<Vertex> GenerateSphereVertices(float radius, int segments)
 {
     std::vector<Vertex> vertices;
