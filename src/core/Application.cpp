@@ -8,7 +8,7 @@
 #include "input/Input.h"
 #include <spdlog/spdlog.h>
 #include <chrono>
-
+#include "core/GameObject.h"
 
 #ifndef M_PI
     #define M_PI 3.14159
@@ -159,38 +159,27 @@ Application::Application() : m_Running(true) {
     m_Camera = std::make_unique<Camera>(45.0f, aspectRatio, 0.1f, 100.0f);
     m_Camera->SetPosition(glm::vec3(0.0f, 2.0f, 5.0f));
     float offset = 12.5;
-    for(int i{0}; i <5; i++)
+    for(int i{0}; i <50; i++)
     {
         for(int y{0}; y < 5; y++)
         {
             m_Objects.push_back({
-            .position = glm::vec3(i, 0, y),
-            .rotation = glm::vec3(0, 0, 0),
-            .scale = glm::vec3(1, 1, 1),
-            .color = glm::vec3(abs(sin(i)), 0.0f, abs(cos(y)))
-        });
+                .position = glm::vec3(i, 0, y),
+                .rotation = glm::vec3(0, 0, 0),
+                .scale = glm::vec3(1, 1, 1),
+                .color = glm::vec3(abs(sin(i)), 0.0f, abs(cos(y)))
+            });
         }
 
     }
 
-    if(false)
-    {
-        m_Objects.push_back({
-            .position = glm::vec3(3, 5, 0),
-            .rotation = glm::vec3(0, 0, 0),
-            .scale = glm::vec3(1, 1, 1),
-            .color = glm::vec3(0, 1, 0)
-        });
-        
-        m_Objects.push_back({
-            .position = glm::vec3(-3, 0, 0),
-            .rotation = glm::vec3(0, 45, 0),  // Rotation Y
-            .scale = glm::vec3(1, 1, 1),
-            .color = glm::vec3(0, 0, 1.0f)
-        });
-    }
+    GameObject testObj("TestCube");
+    spdlog::info("Testing game object yeah");
+    // Add the component
+    TestComponent* testComponentToObject = testObj.AddComponent<TestComponent>();
 
-
+    testComponentToObject->health = 50;
+    testComponentToObject->message = "I'm alive!";
 }
 
 Application::~Application() {
@@ -317,7 +306,7 @@ void Application::Render() {
         m_BasicShader->SetVec3("uColor", obj.color);
         
         // sphere and cube rendering...
-        if (i < 500) {
+       
             if(renderCube == false)
             {
                 m_SphereMesh->Draw();
@@ -327,7 +316,7 @@ void Application::Render() {
                 m_CubeMesh->Draw();
             }
             
-        } 
+         
     }
     
     m_BasicShader->Unbind();
