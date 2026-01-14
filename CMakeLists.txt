@@ -61,16 +61,23 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(glfw)
 
 # GLEW
-set(glew-cmake_BUILD_SHARED OFF CACHE BOOL "" FORCE)
-set(glew-cmake_BUILD_STATIC ON CACHE BOOL "" FORCE)
-set(ONLY_LIBS ON CACHE BOOL "" FORCE)
-FetchContent_Declare(
-    glew
-    GIT_REPOSITORY https://github.com/Perlmint/glew-cmake.git
-    GIT_TAG glew-cmake-2.2.0
-    GIT_SHALLOW TRUE
-)
-FetchContent_MakeAvailable(glew)
+if(APPLE)
+    find_package(GLEW REQUIRED)
+    set(GLEW_TARGET GLEW::GLEW)
+else()
+    set(glew-cmake_BUILD_SHARED OFF CACHE BOOL "" FORCE)
+    set(glew-cmake_BUILD_STATIC ON CACHE BOOL "" FORCE)
+    set(ONLY_LIBS ON CACHE BOOL "" FORCE)
+    FetchContent_Declare(
+        glew
+        GIT_REPOSITORY https://github.com/Perlmint/glew-cmake.git
+        GIT_TAG glew-cmake-2.2.0
+        GIT_SHALLOW TRUE
+    )
+    FetchContent_MakeAvailable(glew)
+    set(GLEW_TARGET libglew_static)
+endif()
+
 
 # Find all sources
 file(GLOB_RECURSE SOURCES src/*.cpp)
@@ -88,7 +95,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME} PRIVATE 
     spdlog::spdlog
     glfw
-    libglew_static
+    ${GLEW_TARGET}
 )
 
 # Platform-specific
