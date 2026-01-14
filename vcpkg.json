@@ -1,0 +1,12 @@
+{
+    "name": "wimzee",
+    "version-string": "0.1.0",
+    "dependencies": [
+        "spdlog",
+        "glm",
+        "stb",
+        "glew",
+        "glfw3",
+        "opengl"
+    ]
+}
