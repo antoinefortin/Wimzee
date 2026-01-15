@@ -30,7 +30,7 @@ template<typename __Component>
 __Component* GameObject::AddComponent()
 {
 
-    spdlog::info("Fuck yeah compoenent added");
+    spdlog::info("Fuck yeah compoenent added ");
     static_assert(std::is_base_of<Component, __Component>::value, "Component must derive from Component");
     auto component = std::make_unique<__Component>();
     __Component* ptr = component.get();

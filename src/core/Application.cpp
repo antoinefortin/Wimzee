@@ -159,7 +159,7 @@ Application::Application() : m_Running(true) {
     m_Camera = std::make_unique<Camera>(45.0f, aspectRatio, 0.1f, 100.0f);
     m_Camera->SetPosition(glm::vec3(0.0f, 2.0f, 5.0f));
     float offset = 12.5;
-    for(int i{0}; i <50; i++)
+    for(int i{0}; i <5; i++)
     {
         for(int y{0}; y < 5; y++)
         {
@@ -174,7 +174,7 @@ Application::Application() : m_Running(true) {
     }
 
     GameObject testObj("TestCube");
-    spdlog::info("Testing game object yeah");
+    spdlog::info("Testing game object");
     // Add the component
     TestComponent* testComponentToObject = testObj.AddComponent<TestComponent>();
 

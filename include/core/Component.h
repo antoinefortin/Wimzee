@@ -2,19 +2,18 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <string>
+#include <memory>
 #include <spdlog/spdlog.h>
 
-
-
 class GameObject;
+class Mesh;
+class Shader;
 
 struct Component
 {
-
     virtual ~Component() = default;
     GameObject* gameObject = nullptr;
 };
-
 
 struct TransformComponent : Component 
 {
@@ -27,11 +26,11 @@ struct TransformComponent : Component
 
 struct MeshRendererComponent : Component {
     glm::vec3 color = glm::vec3(1.0f);
-    // Plus tard: std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material
+    std::shared_ptr<Mesh> mesh;
+    std::shared_ptr<Shader> shader;
 };
 
-
 struct RotatorComponent : Component {
-    glm::vec3 axis = glm::vec3(0.0f, 1.0f, 0.0f);  // Axe de rotation
-    float speed = 45.0f;  // Degrés par seconde
+    glm::vec3 axis = glm::vec3(0.0f, 1.0f, 0.0f);
+    float speed = 45.0f;
 };
