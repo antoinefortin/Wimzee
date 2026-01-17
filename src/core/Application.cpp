@@ -318,7 +318,7 @@ void Application::Render() {
 
         if (MeshRendererComponent* meshRC = obj.GetComponent<MeshRendererComponent>()) {
         
-            spdlog::info("it have rendering to do");
+            
             TransformComponent* gameObjectTransformComponent = obj.GetComponent<TransformComponent>();
 
             glm::mat4 modelMatrix = gameObjectTransformComponent->GetModelMatrix();
@@ -330,9 +330,8 @@ void Application::Render() {
             meshRC->shader->SetMat4("uProjection", projection);
             meshRC->shader->SetMat4("uModel", modelMatrix);
             meshRC->shader->SetVec3("uColor", glm::vec3(0.2, 0.3, 0.5));
-
+                
             meshRC->mesh->Draw();
-
         }
 
         else
@@ -376,7 +375,25 @@ void Application::Render() {
     }
 
 
+    // Render game object
+    //helloGameObject
 
+    if (MeshRendererComponent* meshRC = test.GetComponent<MeshRendererComponent>()) {
+
+        TransformComponent* gameObjectTransformComponent = test.GetComponent<TransformComponent>();
+        
+        glm::mat4 modelMatrix = gameObjectTransformComponent->GetModelMatrix();
+        glm::mat4 view = m_Camera->GetViewMatrix();
+        glm::mat4 projection = m_Camera->GetProjectionMatrix();
+        
+        meshRC->shader->Bind();
+        meshRC->shader->SetMat4("uView", view);
+        meshRC->shader->SetMat4("uProjection", projection);
+        meshRC->shader->SetMat4("uModel", modelMatrix);
+        meshRC->shader->SetVec3("uColor", glm::vec3(0.2, 0.3, 0.5));
+
+        meshRC->mesh->Draw();
+    }
 
 
 }
