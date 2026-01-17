@@ -2,13 +2,17 @@
 #include <cstdint>
 #include <memory>
 #include "core/RenderableObject.h"
+#include "core/GameObject.h"
 #include <vector>
+
+
+
 class Window;
 class Renderer;
 class Mesh;
 class Shader;
 class Camera;
-class GameObject;
+//class GameObject;
 
 class Application
 {
@@ -29,12 +33,8 @@ private:
     std::unique_ptr<Renderer> m_Renderer;
     
     // All game object
-    std::vector<GameObject> gos;
-
-    std::vector<GameObject> shit;
-
-
-
+    std::vector<GameObject> gameObjects;
+    GameObject test;
     std::shared_ptr<Mesh> m_CubeMesh;
     std::shared_ptr<Mesh> m_SphereMesh;
     

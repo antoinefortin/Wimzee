@@ -122,7 +122,8 @@ std::vector<uint32_t> GenerateCubeIndices()
     return indices;
 }
 
-Application::Application() : m_Running(true) {
+Application::Application() : m_Running(true) , test("Test Game object") {
+
     m_Window = std::make_unique<Window>(1280, 720, "Wimzee Engine");
     m_Renderer = std::make_unique<Renderer>();
     
@@ -138,7 +139,13 @@ Application::Application() : m_Running(true) {
     m_Renderer->SetClearColor(0.1f, 0.1f, 0.15f, 1.0f);
     spdlog::info("Application initialized");
 
+    // Camera shit 
+    float aspectRatio = (float)m_Window->GetWidth() / (float)m_Window->GetHeight();
+    m_Camera = std::make_unique<Camera>(45.0f, aspectRatio, 0.1f, 100.0f);
+    m_Camera->SetPosition(glm::vec3(0.0f, 2.0f, 5.0f));
+    float offset = 12.5;
     // Creating cube
+
     std::vector<Vertex> cubeVertices = GenerateCubeVertices();
     std::vector<uint32_t> cubeIndices = GenerateCubeIndices();    
     m_CubeMesh = std::make_shared<Mesh>(cubeVertices, cubeIndices);
@@ -154,14 +161,13 @@ Application::Application() : m_Running(true) {
         "assets/shaders/basic.vert",
         "assets/shaders/basic.frag"
     );
-    // Camera shit 
-    float aspectRatio = (float)m_Window->GetWidth() / (float)m_Window->GetHeight();
-    m_Camera = std::make_unique<Camera>(45.0f, aspectRatio, 0.1f, 100.0f);
-    m_Camera->SetPosition(glm::vec3(0.0f, 2.0f, 5.0f));
-    float offset = 12.5;
-    for(int i{0}; i <5; i++)
+
+
+    int rowX{50};
+    int rowY{50};
+    for(int i{0}; i <rowX; i++)
     {
-        for(int y{0}; y < 5; y++)
+        for(int y{0}; y < rowY; y++)
         {
             m_Objects.push_back({
                 .position = glm::vec3(i, 0, y),
@@ -173,13 +179,29 @@ Application::Application() : m_Running(true) {
 
     }
 
-    GameObject testObj("TestCube");
-    spdlog::info("Testing game object");
-    // Add the component
-    TestComponent* testComponentToObject = testObj.AddComponent<TestComponent>();
+    // simple game object exploration
+    //test = GameObject("Basic aAASdjnius");
 
-    testComponentToObject->health = 50;
-    testComponentToObject->message = "I'm alive!";
+    /*Empalce backl */
+
+    gameObjects.emplace_back("GameObj1");
+    MeshRendererComponent* GameObj1 = gameObjects[0].AddComponent<MeshRendererComponent>();
+    GameObj1->mesh = std::make_shared<Mesh>(sphereVertices, sphereIndices);
+    GameObj1->shader = m_BasicShader;
+
+  //  MeshRendererComponent* meshRC = test.AddComponent<MeshRendererComponent>();
+  //  meshRC->mesh = std::make_shared<Mesh>(sphereVertices, sphereIndices);
+
+    //TestComponent*  = test.GetComponent<TestComponent>();
+
+  //  meshRC->assignName("My debug mesh ");   
+   // meshRC->shader = m_BasicShader;
+
+    //TestComponent* mmmm = helloGameObject.GetComponent(testComponentObject);
+
+    //gameObjects.push_back(std::move(helloGameObject));
+
+
 }
 
 Application::~Application() {
@@ -290,20 +312,49 @@ void Application::Update(float deltaTime) {
 void Application::Render() {
     m_Renderer->Clear();
     
-    glm::mat4 view = m_Camera->GetViewMatrix();
-    glm::mat4 projection = m_Camera->GetProjectionMatrix();
-    
-    m_BasicShader->Bind();
-    m_BasicShader->SetMat4("uView", view);
-    m_BasicShader->SetMat4("uProjection", projection);
-    
 
-    
-    for (size_t i = 0; i < m_Objects.size(); i++) {
-        const auto& obj = m_Objects[i];
+    for (auto& obj : gameObjects) {
+        spdlog::info(obj.name);
+
+        if (MeshRendererComponent* meshRC = obj.GetComponent<MeshRendererComponent>()) {
         
-        m_BasicShader->SetMat4("uModel", obj.GetModelMatrix());
-        m_BasicShader->SetVec3("uColor", obj.color);
+            spdlog::info("it have rendering to do");
+            TransformComponent* gameObjectTransformComponent = obj.GetComponent<TransformComponent>();
+
+            glm::mat4 modelMatrix = gameObjectTransformComponent->GetModelMatrix();
+            glm::mat4 view = m_Camera->GetViewMatrix();
+            glm::mat4 projection = m_Camera->GetProjectionMatrix();
+
+            meshRC->shader->Bind();
+            meshRC->shader->SetMat4("uView", view);
+            meshRC->shader->SetMat4("uProjection", projection);
+            meshRC->shader->SetMat4("uModel", modelMatrix);
+            meshRC->shader->SetVec3("uColor", glm::vec3(0.2, 0.3, 0.5));
+
+            meshRC->mesh->Draw();
+
+        }
+
+        else
+        {
+            spdlog::info("non rendering");
+        }
+    }
+
+    bool renderTest= 0;
+    if(renderTest) {
+        glm::mat4 view = m_Camera->GetViewMatrix();
+        glm::mat4 projection = m_Camera->GetProjectionMatrix();
+        
+        m_BasicShader->Bind();
+        m_BasicShader->SetMat4("uView", view);
+        m_BasicShader->SetMat4("uProjection", projection);
+
+        for (size_t i = 0; i < m_Objects.size(); i++) {
+            const auto& obj = m_Objects[i];
+            m_BasicShader->SetMat4("uModel", obj.GetModelMatrix());
+        //m_BasicShader->SetVec3("uColor", obj.color);
+
         
         // sphere and cube rendering...
        
@@ -320,5 +371,12 @@ void Application::Render() {
     }
     
     m_BasicShader->Unbind();
+    
+
+    }
+
+
+
+
 
 }

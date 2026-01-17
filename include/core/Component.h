@@ -28,9 +28,29 @@ struct MeshRendererComponent : Component {
     glm::vec3 color = glm::vec3(1.0f);
     std::shared_ptr<Mesh> mesh;
     std::shared_ptr<Shader> shader;
+
+    std::string name;
+
+    void assignName(const std::string& _name)
+    {
+        name = _name;
+
+        spdlog::error("HERE {}", name);
+    }
+
 };
 
 struct RotatorComponent : Component {
     glm::vec3 axis = glm::vec3(0.0f, 1.0f, 0.0f);
     float speed = 45.0f;
 };
+
+struct ErrorMsgComponent : Component
+{
+    ErrorMsgComponent()
+    {
+
+        spdlog::error("Added error component");
+    }    
+    
+};  
