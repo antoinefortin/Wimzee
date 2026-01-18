@@ -6,15 +6,19 @@ in vec2 vTexCoord;
 out vec4 FragColor;
 
 uniform vec3 uColor;
+uniform vec3 uLightPos;
+uniform vec3 uLightColor;
+uniform float uLightIntensity;
 /*
 
     DIRECTIOHNAL LIGHT for now
 */
 void main() {
 
-    vec3 lightDir = normalize(vec3(0.5, 1.0, 0.3));
+    vec3 lightDir = normalize(uLightPos);
     float diff = max(dot(normalize(vNormal), lightDir), 0.2);
-    vec4 debug = vec4(1.0);
-    //FragColor = vec4(uColor * diff, 1.0);
-    FragColor = debug;
+    vec3 lightContribution = uLightColor * uLightIntensity;
+    vec3 diffuse = diff * uColor;
+    FragColor = vec4(diffuse, 1.0);
+    
 }

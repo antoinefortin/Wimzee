@@ -54,14 +54,8 @@ enum LightType
 struct LightComponent : Component
 {
     LightComponent(
-        const std::string& _name,
-        LightType _type,
-        const glm::vec3& _lightColor,
-        const float& _intensity
-    ) : name(_name),
-        type{_type}, 
-        color(_lightColor), 
-        intensity(_intensity)
+
+    ) 
     {}
     std::string name{};
     LightType type{};

@@ -192,12 +192,17 @@ Application::Application() : m_Running(true) , test("Test Game object") {
 
 
     gameObjects.emplace_back("Light Object");
-    LightComponent* basicLight = gameObjects[1].AddComponent<LightComponent>(
-        "Basic",
-        LightType::Directionnal,
-        
+    LightComponent* basicLight = gameObjects[1].AddComponent<LightComponent>();
+    gameObjects[1].transform->position = glm::vec3(0.0, 5.0, 0.0);
+    basicLight->name = "BASIC LIGHT";
+    basicLight->intensity = 1.0;
+    basicLight->color = glm::vec3(0.0f, 1.0f, 0.0f);
 
-    );
+
+
+
+
+
   //  MeshRendererComponent* meshRC = test.AddComponent<MeshRendererComponent>();
   //  meshRC->mesh = std::make_shared<Mesh>(sphereVertices, sphereIndices);
 
@@ -318,91 +323,56 @@ void Application::Update(float deltaTime) {
 
 
 
-void Application::Render() {
+void Application::Render() 
+{
     m_Renderer->Clear();
-    
 
-    for (auto& obj : gameObjects) {
-       // spdlog::info(obj.name);
+    // Rnedering ewith light 
+    glm::vec3 lightPos;
+    glm::vec3 lightColor;
+    float lightIntensity;
+    for(auto& obj: gameObjects)
+    {
 
-        if (MeshRendererComponent* meshRC = obj.GetComponent<MeshRendererComponent>()) {
-        
-            
-            TransformComponent* gameObjectTransformComponent = obj.GetComponent<TransformComponent>();
+        if(LightComponent* light= obj.GetComponent<LightComponent>())
+        {
 
-            glm::mat4 modelMatrix = gameObjectTransformComponent->GetModelMatrix();
+            lightPos = obj.GetComponent<TransformComponent>()->position;
+            lightColor = light->color;
+            lightIntensity = light->intensity;
+        }
+    }
+
+
+    // Get object with renderable
+    for(auto& obj: gameObjects)
+    {
+        if (MeshRendererComponent* meshRC = obj.GetComponent<MeshRendererComponent>()) 
+        {
+            TransformComponent* gameObjectTransform = obj.GetComponent<TransformComponent>();
+            glm::mat4 modelMatrix = gameObjectTransform->GetModelMatrix();
             glm::mat4 view = m_Camera->GetViewMatrix();
             glm::mat4 projection = m_Camera->GetProjectionMatrix();
-
+            // Binmd data to shader
+            //spdlog::info("{} , {},  {}", lightPos.x, lightPos.y, lightPos.z);
             meshRC->shader->Bind();
+            meshRC->shader->SetVec3("uLightPos", lightPos);
+            
+
+            meshRC->shader->SetVec3("uColor", glm::vec3(0.0, 0.0, 0.0));
+            meshRC->shader->SetFloat("uLightIntensity", 0.5f);
+            meshRC->shader->SetVec3("uLightColor", glm::vec3(0.0, 0.0, 0.0));
+            
+            
             meshRC->shader->SetMat4("uView", view);
             meshRC->shader->SetMat4("uProjection", projection);
             meshRC->shader->SetMat4("uModel", modelMatrix);
-            meshRC->shader->SetVec3("uColor", glm::vec3(0.2, 0.3, 0.5));
-                
+            
+
             meshRC->mesh->Draw();
         }
-
-        else
-        {
-            spdlog::info("non rendering");
-        }
     }
-
-    bool renderTest= 0;
-    if(renderTest) {
-        glm::mat4 view = m_Camera->GetViewMatrix();
-        glm::mat4 projection = m_Camera->GetProjectionMatrix();
-        
-        m_BasicShader->Bind();
-        m_BasicShader->SetMat4("uView", view);
-        m_BasicShader->SetMat4("uProjection", projection);
-
-        for (size_t i = 0; i < m_Objects.size(); i++) {
-            const auto& obj = m_Objects[i];
-            m_BasicShader->SetMat4("uModel", obj.GetModelMatrix());
-        //m_BasicShader->SetVec3("uColor", obj.color);
-
-        
-        // sphere and cube rendering...
-       
-            if(renderCube == false)
-            {
-                m_SphereMesh->Draw();
-            }
-            else 
-            {
-                m_CubeMesh->Draw();
-            }
-            
-         
-    }
-    
-    m_BasicShader->Unbind();
-    
-
-    }
-
-
-    // Render game object
-    //helloGameObject
-
-    if (MeshRendererComponent* meshRC = test.GetComponent<MeshRendererComponent>()) {
-
-        TransformComponent* gameObjectTransformComponent = test.GetComponent<TransformComponent>();
-        
-        glm::mat4 modelMatrix = gameObjectTransformComponent->GetModelMatrix();
-        glm::mat4 view = m_Camera->GetViewMatrix();
-        glm::mat4 projection = m_Camera->GetProjectionMatrix();
-        
-        meshRC->shader->Bind();
-        meshRC->shader->SetMat4("uView", view);
-        meshRC->shader->SetMat4("uProjection", projection);
-        meshRC->shader->SetMat4("uModel", modelMatrix);
-        meshRC->shader->SetVec3("uColor", glm::vec3(0.2, 0.3, 0.5));
-
-        meshRC->mesh->Draw();
-    }
+    // End rendering light
 
 
 }
