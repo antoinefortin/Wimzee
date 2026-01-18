@@ -34,8 +34,6 @@ struct MeshRendererComponent : Component {
     void assignName(const std::string& _name)
     {
         name = _name;
-
-        spdlog::error("HERE {}", name);
     }
 
 };
@@ -43,6 +41,34 @@ struct MeshRendererComponent : Component {
 struct RotatorComponent : Component {
     glm::vec3 axis = glm::vec3(0.0f, 1.0f, 0.0f);
     float speed = 45.0f;
+};
+
+
+enum LightType
+{
+    Point, 
+    Area, 
+    Directionnal
+};
+
+struct LightComponent : Component
+{
+    LightComponent(
+        const std::string& _name,
+        LightType _type,
+        const glm::vec3& _lightColor,
+        const float& _intensity
+    ) : name(_name),
+        type{_type}, 
+        color(_lightColor), 
+        intensity(_intensity)
+    {}
+    std::string name{};
+    LightType type{};
+    float intensity{};
+    glm::vec3 color {};
+    
+
 };
 
 struct ErrorMsgComponent : Component

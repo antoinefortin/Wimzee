@@ -67,15 +67,3 @@ bool GameObject::HasComponent()
     return m_ComponentMap.count(std::type_index(typeid(__Component))) > 0;
 }   
 
-
-struct TestComponent : Component {
-
-    TestComponent() 
-    {
-
-        spdlog::error("Test component added");
-    }
-    int health = 100;
-    std::string message = "Hello!";
-};
-

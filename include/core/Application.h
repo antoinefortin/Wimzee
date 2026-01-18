@@ -39,6 +39,7 @@ private:
     std::shared_ptr<Mesh> m_SphereMesh;
     
     std::shared_ptr<Shader> m_BasicShader;
+    std::shared_ptr<Shader> m_BasicLigthShader;
 
     std::vector<RenderableObject> m_Objects; 
     bool renderCube =  false;

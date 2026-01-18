@@ -162,6 +162,7 @@ Application::Application() : m_Running(true) , test("Test Game object") {
         "assets/shaders/basic.frag"
     );
 
+    m_BasicLigthShader = std::make_shared<Shader>("assets/shaders/basic.vert", "assets/shaders/basicLight.frag");
 
     int rowX{50};
     int rowY{50};
@@ -187,8 +188,16 @@ Application::Application() : m_Running(true) , test("Test Game object") {
     gameObjects.emplace_back("GameObj1");
     MeshRendererComponent* GameObj1 = gameObjects[0].AddComponent<MeshRendererComponent>();
     GameObj1->mesh = std::make_shared<Mesh>(sphereVertices, sphereIndices);
-    GameObj1->shader = m_BasicShader;
+    GameObj1->shader = m_BasicLigthShader;
 
+
+    gameObjects.emplace_back("Light Object");
+    LightComponent* basicLight = gameObjects[1].AddComponent<LightComponent>(
+        "Basic",
+        LightType::Directionnal,
+        
+
+    );
   //  MeshRendererComponent* meshRC = test.AddComponent<MeshRendererComponent>();
   //  meshRC->mesh = std::make_shared<Mesh>(sphereVertices, sphereIndices);
 
@@ -314,7 +323,7 @@ void Application::Render() {
     
 
     for (auto& obj : gameObjects) {
-        spdlog::info(obj.name);
+       // spdlog::info(obj.name);
 
         if (MeshRendererComponent* meshRC = obj.GetComponent<MeshRendererComponent>()) {
         
