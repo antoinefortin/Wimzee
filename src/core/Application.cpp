@@ -359,9 +359,9 @@ void Application::Render()
             meshRC->shader->SetVec3("uLightPos", lightPos);
             
 
-            meshRC->shader->SetVec3("uColor", glm::vec3(0.0, 0.0, 0.0));
+            meshRC->shader->SetVec3("uColor", glm::vec3(0.23, 0.54, 0.22));
             meshRC->shader->SetFloat("uLightIntensity", 0.5f);
-            meshRC->shader->SetVec3("uLightColor", glm::vec3(0.0, 0.0, 0.0));
+            meshRC->shader->SetVec3("uLightColor", glm::vec3(0.5, 0.5, 0.5));
             
             
             meshRC->shader->SetMat4("uView", view);
