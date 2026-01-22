@@ -65,6 +65,38 @@ std::vector<uint32_t> GenerateSphereIndices(int segments)
     return indices;
 }
 
+
+std::vector<Vertex> GeneratePlaneVertices()
+{
+
+    std::vector<Vertex> planeVerts {
+
+        // first triangle
+        Vertex(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f)),
+        Vertex(glm::vec3(10.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f)),
+        Vertex(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f)),
+        
+        // second triangles
+        Vertex(glm::vec3(10.0f, 0.0f, 10.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f)),
+
+    };
+
+    
+    return planeVerts;
+
+
+}
+
+
+std::vector<uint32_t> GeneratePlaneIndices()
+{
+    std::vector<uint32_t> indices = {
+        0, 2, 1,   // first triangle
+        1, 2, 3    // second triangle
+    };
+    return indices;
+}
+
 std::vector<Vertex> GenerateCubeVertices()
 {
 
@@ -155,6 +187,12 @@ Application::Application() : m_Running(true) , test("Test Game object") {
     std::vector<uint32_t> sphereIndices = GenerateSphereIndices(32);
     m_SphereMesh = std::make_shared<Mesh>(sphereVertices, sphereIndices);
 
+    //Plane mesh
+    std::vector<Vertex> planeVertices = GeneratePlaneVertices();
+    std::vector<uint32_t> planeIndices = GeneratePlaneIndices();  
+
+    
+
     // Shader
     m_BasicShader = std::make_shared<Shader>
     (
@@ -185,7 +223,7 @@ Application::Application() : m_Running(true) , test("Test Game object") {
 
     /*Empalce backl */
 
-    gameObjects.emplace_back("GameObj1");
+    gameObjects.emplace_back("Basic Sphere");
     MeshRendererComponent* GameObj1 = gameObjects[0].AddComponent<MeshRendererComponent>();
     GameObj1->mesh = std::make_shared<Mesh>(sphereVertices, sphereIndices);
     GameObj1->shader = m_BasicLigthShader;
@@ -199,8 +237,15 @@ Application::Application() : m_Running(true) , test("Test Game object") {
     basicLight->color = glm::vec3(0.0f, 1.0f, 0.0f);
 
 
-
-
+    // Add plane floor 
+    gameObjects.emplace_back("Floor plane Object");
+    GameObject floor("Floor");
+    m_PlaneMesh = std::make_shared<Mesh>(GeneratePlaneVertices(), GeneratePlaneIndices());
+    MeshRendererComponent* floorMeshRenderer = gameObjects[2].AddComponent<MeshRendererComponent>();
+    floorMeshRenderer->mesh = std::make_shared<Mesh>(GeneratePlaneVertices(), GeneratePlaneIndices());
+    floorMeshRenderer->shader = m_BasicLigthShader;
+    //GameObj1->mesh = std::make_shared<Mesh>(sphereVertices, sphereIndices);
+    //GameObj1->shader = m_BasicLigthShader;
 
 
   //  MeshRendererComponent* meshRC = test.AddComponent<MeshRendererComponent>();

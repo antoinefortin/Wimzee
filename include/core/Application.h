@@ -35,9 +35,12 @@ private:
     // All game object
     std::vector<GameObject> gameObjects;
     GameObject test;
+
+    // Test mesh
     std::shared_ptr<Mesh> m_CubeMesh;
     std::shared_ptr<Mesh> m_SphereMesh;
-    
+    std::shared_ptr<Mesh> m_PlaneMesh;
+    // Baswic shader
     std::shared_ptr<Shader> m_BasicShader;
     std::shared_ptr<Shader> m_BasicLigthShader;
 
