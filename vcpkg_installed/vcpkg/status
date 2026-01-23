@@ -1,0 +1,121 @@
+Package: vcpkg-cmake-config
+Version: 2024-05-23
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 942a60faab6f884767ae8b2f255a5f5b00b214890904e293cd552e758d6f41c8
+Status: install ok installed
+
+Package: vcpkg-cmake
+Version: 2024-04-23
+Architecture: x64-windows
+Multi-Arch: same
+Abi: a8348a2172057a4a77c87cd6db413e81cb8f4f8f4b434e6bf410a98f4ed3d149
+Status: install ok installed
+
+Package: egl-registry
+Version: 2025-05-27
+Architecture: x64-windows-static
+Multi-Arch: same
+Abi: f6474c25e889196acfeb7cd6b9c1662f2fd4c458bf176f2753e42b811094a833
+Description: EGL API and Extension Registry
+Status: install ok installed
+
+Package: opengl-registry
+Version: 2025-10-23
+Depends: egl-registry
+Architecture: x64-windows-static
+Multi-Arch: same
+Abi: a861d5dc7a6595d1ed1377271332801d39bea68e40dc32d754c7cb6f87bfe268
+Description: OpenGL, OpenGL ES, and OpenGL ES-SC API and Extension Registry
+Status: install ok installed
+
+Package: opengl
+Version: 2022-12-04
+Port-Version: 3
+Depends: opengl-registry
+Architecture: x64-windows-static
+Multi-Arch: same
+Abi: 004e82f0760dfec3389980b0dc388aec5dfa14e71aeaf5f222e72e3a1030db87
+Description: Open Graphics Library (OpenGL)[3][4][5] is a cross-language, cross-platform application programming interface (API) for rendering 2D and 3D vector graphics.
+Status: install ok installed
+
+Package: glew
+Version: 2.3.0
+Port-Version: 1
+Depends: opengl, vcpkg-cmake:x64-windows, vcpkg-cmake-config:x64-windows
+Architecture: x64-windows-static
+Multi-Arch: same
+Abi: dc6979223861bd727b89f9c992a7da4d1eab5b9a9a9dd68dbbd9abefe0771263
+Description: The OpenGL Extension Wrangler Library (GLEW) is a cross-platform open-source C/C++ extension loading library.
+Status: install ok installed
+
+Package: glfw3
+Version: 3.4
+Port-Version: 1
+Depends: vcpkg-cmake:x64-windows, vcpkg-cmake-config:x64-windows
+Architecture: x64-windows-static
+Multi-Arch: same
+Abi: 438ad1bdc07e9a1a32217b4e4773345a25b82ab45185fe1b77510fa55a0ec9f6
+Description: GLFW is a free, Open Source, multi-platform library for OpenGL, OpenGL ES and Vulkan application development. It provides a simple, platform-independent API for creating windows, contexts and surfaces, reading input, handling events, etc.
+Status: install ok installed
+
+Package: glm
+Version: 1.0.3
+Depends: vcpkg-cmake:x64-windows, vcpkg-cmake-config:x64-windows
+Architecture: x64-windows-static
+Multi-Arch: same
+Abi: 4901c660f23679e683208c74265c66bb46ff33b8330d402819982620ffe94398
+Description: OpenGL Mathematics (GLM)
+Status: install ok installed
+
+Package: fmt
+Version: 12.1.0
+Depends: vcpkg-cmake:x64-windows, vcpkg-cmake-config:x64-windows
+Architecture: x64-windows-static
+Multi-Arch: same
+Abi: 016fbd542e6ed0c7a64def97415cf3997050107814c264c4afe6ff2e89b58d86
+Description: {fmt} is an open-source formatting library providing a fast and safe alternative to C stdio and C++ iostreams.
+Status: install ok installed
+
+Package: spdlog
+Version: 1.17.0
+Depends: vcpkg-cmake:x64-windows, vcpkg-cmake-config:x64-windows
+Architecture: x64-windows-static
+Multi-Arch: same
+Abi: 31b378906890501f185a05533611d6958cee450c5b1f1156fb1f34e21f023c77
+Description: Very fast, header-only/compiled, C++ logging library.
+Default-Features: fmt, tz-offset
+Status: install ok installed
+
+Package: spdlog
+Feature: fmt
+Depends: fmt
+Architecture: x64-windows-static
+Multi-Arch: same
+Description: Use fmt library
+Status: install ok installed
+
+Package: spdlog
+Feature: tz-offset
+Architecture: x64-windows-static
+Multi-Arch: same
+Description: Omit %z timezone offset (use on platforms without tm_gmtoff)
+Status: install ok installed
+
+Package: stb
+Version: 2024-07-29
+Port-Version: 1
+Architecture: x64-windows-static
+Multi-Arch: same
+Abi: 63b4f951a1873952a2ed31ffca6732e77d90ffdd7ae3811ed6e1b52bfbebb7f9
+Description: public domain header-only libraries
+Status: install ok installed
+
+Package: miniaudio
+Version: 0.11.24
+Architecture: x64-windows-static
+Multi-Arch: same
+Abi: db6ba85f83e408d6c1782da97bcf445fbb39cd13b5c39239b7b48f65ac6a2b0d
+Description: Audio playback and capture library written in C, in a single source file
+Status: install ok installed
+

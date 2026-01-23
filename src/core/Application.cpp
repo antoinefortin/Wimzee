@@ -9,6 +9,7 @@
 #include <spdlog/spdlog.h>
 #include <chrono>
 #include "core/GameObject.h"
+#include "audio/AudioManager.h"
 
 #ifndef M_PI
     #define M_PI 3.14159
@@ -158,13 +159,22 @@ Application::Application() : m_Running(true) , test("Test Game object") {
 
     m_Window = std::make_unique<Window>(1280, 720, "Wimzee Engine");
     m_Renderer = std::make_unique<Renderer>();
-    
+    m_AudioManager = std::make_unique<AudioManager>();
+
     if (!m_Renderer->Initialize()) {
         spdlog::error("Failed to initialize renderer");
         m_Running = false;
         return;
     }
     
+    
+    //bool a = m_AudioManager->Init();
+    if(!m_AudioManager->Init())
+    {
+        spdlog::error("Failed audio engine init");
+
+    }
+
     Input::Initialize(m_Window->GetNativeWindow());  // ← Ajoute
 
     // basic background color
@@ -217,11 +227,6 @@ Application::Application() : m_Running(true) , test("Test Game object") {
         }
 
     }
-
-    // simple game object exploration
-    //test = GameObject("Basic aAASdjnius");
-
-    /*Empalce backl */
 
     gameObjects.emplace_back("Basic Sphere");
     MeshRendererComponent* GameObj1 = gameObjects[0].AddComponent<MeshRendererComponent>();
@@ -279,6 +284,7 @@ void Application::ProcessInput()
         m_Renderer->SetClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     }
 
+    
 }
 
 
@@ -358,6 +364,15 @@ void Application::HandleCameraInput(float deltaTime)
 }
 void Application::Update(float deltaTime) {
 
+
+    
+
+    if(Input::IsKeyPressed(KEY_P))
+    {
+        spdlog::info("P Presed");
+        m_AudioManager->PlayThatSound("assets/audios/synth.wav");
+        
+    }
 
     static int frameCount = 0;
     if (++frameCount % (60 * 50) == 0) {

@@ -6,7 +6,7 @@
 #include <vector>
 
 
-
+class AudioManager;
 class Window;
 class Renderer;
 class Mesh;
@@ -31,6 +31,7 @@ private:
     uint64_t frameNumber;
     std::unique_ptr<Window> m_Window;
     std::unique_ptr<Renderer> m_Renderer;
+    std::unique_ptr<AudioManager> m_AudioManager;
     
     // All game object
     std::vector<GameObject> gameObjects;

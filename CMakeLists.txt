@@ -16,6 +16,7 @@ find_package(OpenGL REQUIRED)
 
 # stb (header-only, peut être tricky)
 find_path(STB_INCLUDE_DIRS "stb_image.h")
+find_path(STB_INCLUDE_DIRS "miniaudio.h")
 
 # Sources
 file(GLOB_RECURSE SOURCES "src/*.cpp")

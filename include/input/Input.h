@@ -48,6 +48,9 @@ private:
 #define KEY_Q GLFW_KEY_Q
 #define KEY_E GLFW_KEY_E
 
+#define KEY_P GLFW_KEY_P // Audio shortcut
+
+
 #define MOUSE_LEFT GLFW_MOUSE_BUTTON_LEFT
 #define MOUSE_RIGHT GLFW_MOUSE_BUTTON_RIGHT
 
