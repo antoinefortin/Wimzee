@@ -20,11 +20,11 @@ public:
     unsigned char *data;
     void CreateOpenGlTexture();
     void sayShit();
-
+    void Bind(unsigned int slot);
 
 
     GLuint textureProgramID;
-
+    GLuint m_TextureID; 
 
 
 private:

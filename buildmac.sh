@@ -4,9 +4,9 @@ set -e
 echo "Building Wimzee on macOS..."
 
 # Clean build
-if [ -d "build" ]; then
-    rm -rf build
-fi
+#if [ -d "build" ]; then
+ #   rm -rf build
+#fi
 
 # Detect architecture
 ARCH=$(uname -m)

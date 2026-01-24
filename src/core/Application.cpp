@@ -5,6 +5,8 @@
 
 #include "graphics/Mesh.h"
 #include "graphics/Shader.h"
+#include "graphics/Texture.h"
+
 #include "input/Input.h"
 #include <spdlog/spdlog.h>
 #include <chrono>
@@ -69,33 +71,20 @@ std::vector<uint32_t> GenerateSphereIndices(int segments)
 
 std::vector<Vertex> GeneratePlaneVertices()
 {
+    std::vector<Vertex> verts {
 
-    std::vector<Vertex> planeVerts {
-
-        // first triangle
-        Vertex(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f)),
-        Vertex(glm::vec3(10.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f)),
-        Vertex(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f)),
-        
-        // second triangles
-        Vertex(glm::vec3(10.0f, 0.0f, 10.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f)),
-
+        Vertex(glm::vec3(-10, 0, -5), glm::vec3(0, 1, 0), glm::vec2(0, 0)),  // bottom-left
+        Vertex(glm::vec3( 5, 0, -5), glm::vec3(0, 1, 0), glm::vec2(1, 0)),  // bottom-right
+        Vertex(glm::vec3( 5, 0,  5), glm::vec3(0, 1, 0), glm::vec2(1, 1)),  // top-right
+        Vertex(glm::vec3(-5, 0,  5), glm::vec3(0, 1, 0), glm::vec2(0, 1)),  // top-left
     };
-
-    
-    return planeVerts;
-
-
+    return verts;
 }
 
 
 std::vector<uint32_t> GeneratePlaneIndices()
 {
-    std::vector<uint32_t> indices = {
-        0, 2, 1,   // first triangle
-        1, 2, 3    // second triangle
-    };
-    return indices;
+    return { 0, 1, 2,  2, 3, 0 };
 }
 
 std::vector<Vertex> GenerateCubeVertices()
@@ -181,6 +170,13 @@ Application::Application() : m_Running(true) , test("Test Game object") {
     m_Renderer->SetClearColor(0.1f, 0.1f, 0.15f, 1.0f);
     spdlog::info("Application initialized");
 
+
+    // Texture stuiff 
+    std::string textureFile = "assets/textures/golden.jpg";    
+    textureTest =  std::make_shared<Texture>(textureFile);
+    textureTest->sayShit();
+
+    textureTest->data;
     // Camera shit 
     float aspectRatio = (float)m_Window->GetWidth() / (float)m_Window->GetHeight();
     m_Camera = std::make_unique<Camera>(45.0f, aspectRatio, 0.1f, 100.0f);
@@ -416,6 +412,9 @@ void Application::Render()
             // Binmd data to shader
             //spdlog::info("{} , {},  {}", lightPos.x, lightPos.y, lightPos.z);
             meshRC->shader->Bind();
+            textureTest->Bind(0);
+            meshRC->shader->SetInt("uTexture", 0);
+
             meshRC->shader->SetVec3("uLightPos", lightPos);
             
 
